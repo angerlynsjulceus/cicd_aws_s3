@@ -16,22 +16,24 @@ stages:
       inputs:
         terraformVersion: $(terraformVersion)
     
-    - task: TerraformTaskV4@4
+    - task: TerraformCLI@0
       displayName: 'Terraform Init'
       inputs:
-        provider: 'aws'
         command: 'init'
         workingDirectory: 'infrastructure'
-        backendServiceAWS: 'aws-connection'
+      env:
+        AWS_ACCESS_KEY_ID: $(AWS_ACCESS_KEY_ID)
+        AWS_SECRET_ACCESS_KEY: $(AWS_SECRET_ACCESS_KEY)
     
-    - task: TerraformTaskV4@4
+    - task: TerraformCLI@0
       displayName: 'Terraform Plan'
       inputs:
-        provider: 'aws'
         command: 'plan'
         workingDirectory: 'infrastructure'
         commandOptions: '-var-file=variables/dev2.eus.variables.tfvars'
-        environmentServiceNameAWS: 'aws-connection'
+      env:
+        AWS_ACCESS_KEY_ID: $(AWS_ACCESS_KEY_ID)
+        AWS_SECRET_ACCESS_KEY: $(AWS_SECRET_ACCESS_KEY)
 
 - stage: Apply
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
@@ -47,19 +49,21 @@ stages:
             inputs:
               terraformVersion: $(terraformVersion)
           
-          - task: TerraformTaskV4@4
+          - task: TerraformCLI@0
             displayName: 'Terraform Init'
             inputs:
-              provider: 'aws'
               command: 'init'
               workingDirectory: 'infrastructure'
-              backendServiceAWS: 'aws-connection'
+            env:
+              AWS_ACCESS_KEY_ID: $(AWS_ACCESS_KEY_ID)
+              AWS_SECRET_ACCESS_KEY: $(AWS_SECRET_ACCESS_KEY)
           
-          - task: TerraformTaskV4@4
+          - task: TerraformCLI@0
             displayName: 'Terraform Apply'
             inputs:
-              provider: 'aws'
               command: 'apply'
               workingDirectory: 'infrastructure'
-              commandOptions: '-var-file=variables/dev2.eus.variables.tfvars'
-              environmentServiceNameAWS: 'aws-connection'
+              commandOptions: '-var-file=variables/dev2.eus.variables.tfvars -auto-approve'
+            env:
+              AWS_ACCESS_KEY_ID: $(AWS_ACCESS_KEY_ID)
+              AWS_SECRET_ACCESS_KEY: $(AWS_SECRET_ACCESS_KEY)
