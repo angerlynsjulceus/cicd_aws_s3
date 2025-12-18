@@ -1,5 +1,9 @@
 terraform {
-  backend  "s3"{}
+  backend "s3" {
+    bucket = "your-terraform-state-bucket"
+    key    = "s3-bucket/terraform.tfstate"
+    region = "us-east-1"
+  }
   required_providers {
     aws = {
       source  = "hashicorp/aws"
@@ -21,7 +25,7 @@ variable "environment" {
 
 
 module "aws_s3_bucket" {
-  source                   = "./modules/s3_bucket"
-  environment                   = var.environment
-
+  source      = "./modules/s3_bucket"
+  environment = var.environment
+  bucket_name = "ajawscicd3bucket-${var.environment}"
 }
