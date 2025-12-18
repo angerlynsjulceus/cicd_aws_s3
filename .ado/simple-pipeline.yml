@@ -16,18 +16,20 @@ stages:
       inputs:
         terraformVersion: $(terraformVersion)
     
-    - task: TerraformCLI@0
+    - task: TerraformTaskV4@4
       displayName: 'Terraform Init'
       inputs:
+        provider: 'aws'
         command: 'init'
         workingDirectory: 'infrastructure'
       env:
         AWS_ACCESS_KEY_ID: $(AWS_ACCESS_KEY_ID)
         AWS_SECRET_ACCESS_KEY: $(AWS_SECRET_ACCESS_KEY)
     
-    - task: TerraformCLI@0
+    - task: TerraformTaskV4@4
       displayName: 'Terraform Plan'
       inputs:
+        provider: 'aws'
         command: 'plan'
         workingDirectory: 'infrastructure'
         commandOptions: '-var-file=variables/dev2.eus.variables.tfvars'
@@ -49,18 +51,20 @@ stages:
             inputs:
               terraformVersion: $(terraformVersion)
           
-          - task: TerraformCLI@0
+          - task: TerraformTaskV4@4
             displayName: 'Terraform Init'
             inputs:
+              provider: 'aws'
               command: 'init'
               workingDirectory: 'infrastructure'
             env:
               AWS_ACCESS_KEY_ID: $(AWS_ACCESS_KEY_ID)
               AWS_SECRET_ACCESS_KEY: $(AWS_SECRET_ACCESS_KEY)
           
-          - task: TerraformCLI@0
+          - task: TerraformTaskV4@4
             displayName: 'Terraform Apply'
             inputs:
+              provider: 'aws'
               command: 'apply'
               workingDirectory: 'infrastructure'
               commandOptions: '-var-file=variables/dev2.eus.variables.tfvars -auto-approve'
